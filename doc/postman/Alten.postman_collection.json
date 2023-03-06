@@ -1,0 +1,395 @@
+{
+	"info": {
+		"_postman_id": "b9fd14c0-037b-458f-90b8-50f83118626e",
+		"name": "Alten",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check get product with id 1000\", function () {\r",
+							"  const expectedStatusCode = 200;\r",
+							"  pm.response.to.have.status(expectedStatusCode);\r",
+							"\r",
+							"  const response = pm.response.json();\r",
+							"  pm.expect(response).to.have.property(\"id\", 1000);\r",
+							"  pm.expect(response).to.have.property(\"code\", \"f230fh0g3\");\r",
+							"  pm.expect(response).to.have.property(\"name\", \"Bamboo Watch\");\r",
+							"  pm.expect(response).to.have.property(\"description\", \"Product Description\");\r",
+							"  pm.expect(response).to.have.property(\"image\", \"bamboo-watch.jpg\");\r",
+							"  pm.expect(response).to.have.property(\"price\", 65);\r",
+							"  pm.expect(response).to.have.property(\"category\", \"Accessories\");\r",
+							"  pm.expect(response).to.have.property(\"quantity\", 24);\r",
+							"  pm.expect(response).to.have.property(\"inventoryStatus\", \"INSTOCK\");\r",
+							"  pm.expect(response).to.have.property(\"rating\", 5);\r",
+							"\r",
+							"  pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/products/1000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products",
+						"1000"
+					]
+				},
+				"description": "Get product with id 1000"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get All Products\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().length).to.be.equal(30);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check create product\", function () {\r",
+							"  const expectedStatusCode = 201;\r",
+							"  pm.response.to.have.status(expectedStatusCode);\r",
+							"\r",
+							"  const response = pm.response.json();\r",
+							"  pm.expect(response.id < 1000 || response.id > 1030).to.be.true;\r",
+							"  pm.expect(response).to.have.property(\"code\", \"f58d15er\");\r",
+							"  pm.expect(response).to.have.property(\"name\", \"Gold Watch\");\r",
+							"  pm.expect(response).to.have.property(\"description\", \"Product Description 999\");\r",
+							"  pm.expect(response).to.have.property(\"image\", \"gold-watch.jpg\");\r",
+							"  pm.expect(response).to.have.property(\"price\", 90);\r",
+							"  pm.expect(response).to.have.property(\"category\", \"Accessories\");\r",
+							"  pm.expect(response).to.have.property(\"quantity\", 91);\r",
+							"  pm.expect(response).to.have.property(\"inventoryStatus\", \"INSTOCK\");\r",
+							"  pm.expect(response).to.have.property(\"rating\", 92);\r",
+							"\r",
+							"  pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"f58d15er\",\r\n    \"name\": \"Gold Watch\",\r\n    \"description\": \"Product Description 999\",\r\n    \"image\": \"gold-watch.jpg\",\r\n    \"price\": 90,\r\n    \"category\": \"Accessories\",\r\n    \"quantity\": 91,\r\n    \"inventoryStatus\": \"INSTOCK\",\r\n    \"rating\": 92\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch product",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getProductRequest = {\r",
+							"    url: 'localhost:8080/products/1',\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"pm.sendRequest(getProductRequest, function (err, response) {\r",
+							"    pm.test('Check product found', () => {\r",
+							"        pm.expect(response).to.have.property('code', 200);\r",
+							"    });\r",
+							"}); "
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check patch product\", function () {\r",
+							"  const expectedStatusCode = 201;\r",
+							"  pm.response.to.have.status(expectedStatusCode);\r",
+							"\r",
+							"  const response = pm.response.json();\r",
+							"  pm.expect(response).to.have.property(\"id\", 1);\r",
+							"  pm.expect(response).to.have.property(\"code\", \"f58d1599\");\r",
+							"  pm.expect(response).to.have.property(\"name\", \"New Gold Watch\");\r",
+							"  pm.expect(response).to.have.property(\"description\", \"New Product Description\");\r",
+							"  pm.expect(response).to.have.property(\"image\", \"new-gold-watch.jpg\");\r",
+							"  pm.expect(response).to.have.property(\"price\", 93);\r",
+							"  pm.expect(response).to.have.property(\"category\", \"Electronics\");\r",
+							"  pm.expect(response).to.have.property(\"quantity\", 94);\r",
+							"  pm.expect(response).to.have.property(\"inventoryStatus\", \"LOWSTOCK\");\r",
+							"  pm.expect(response).to.have.property(\"rating\", 95);\r",
+							"\r",
+							"  pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"code\": \"f58d1599\",\r\n    \"name\": \"New Gold Watch\",\r\n    \"description\": \"New Product Description\",\r\n    \"image\": \"new-gold-watch.jpg\",\r\n    \"price\": 93,\r\n    \"category\": \"Electronics\",\r\n    \"quantity\": 94,\r\n    \"inventoryStatus\": \"LOWSTOCK\",\r\n    \"rating\": 95\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete Product with id 1\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"\r",
+							"    const getProductRequest = {\r",
+							"        url: 'localhost:8080/products/1',\r",
+							"        method: 'GET',\r",
+							"        header: {\r",
+							"            'Content-Type': 'application/json'\r",
+							"        }\r",
+							"    };\r",
+							"    pm.sendRequest(getProductRequest, function (err, response) {\r",
+							"        pm.test('Check product not found', () => {\r",
+							"            pm.expect(response).to.have.property('code', 404);\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getProductRequest = {\r",
+							"    url: 'localhost:8080/products/1',\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"pm.sendRequest(getProductRequest, function (err, response) {\r",
+							"    pm.test('Check product found', () => {\r",
+							"        pm.expect(response).to.have.property('code', 200);\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/products/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete Product with id 1001 and 1002\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"\r",
+							"    const getProduct1001Request = {\r",
+							"        url: 'localhost:8080/products/1001',\r",
+							"        method: 'GET',\r",
+							"        header: {\r",
+							"            'Content-Type': 'application/json'\r",
+							"        }\r",
+							"    };\r",
+							"    pm.sendRequest(getProduct1001Request, function (err, response) {\r",
+							"        pm.test('Check product not found', () => {\r",
+							"            pm.expect(response).to.have.property('code', 404);\r",
+							"        });\r",
+							"    });\r",
+							"\r",
+							"    const getProduct1002Request = {\r",
+							"        url: 'localhost:8080/products/1002',\r",
+							"        method: 'GET',\r",
+							"        header: {\r",
+							"            'Content-Type': 'application/json'\r",
+							"        }\r",
+							"    };\r",
+							"    pm.sendRequest(getProduct1002Request, function (err, response) {\r",
+							"        pm.test('Check product not found', () => {\r",
+							"            pm.expect(response).to.have.property('code', 404);\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getProduct1001Request = {\r",
+							"    url: 'localhost:8080/products/1001',\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"pm.sendRequest(getProduct1001Request, function (err, response) {\r",
+							"    pm.test('Check product found', () => {\r",
+							"        pm.expect(response).to.have.property('code', 200);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"const getProduct1002Request = {\r",
+							"    url: 'localhost:8080/products/1002',\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"pm.sendRequest(getProduct1002Request, function (err, response) {\r",
+							"    pm.test('Check product found', () => {\r",
+							"        pm.expect(response).to.have.property('code', 200);\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    \"1001\",\r\n    \"1002\"\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
